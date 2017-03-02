@@ -4,23 +4,23 @@
  * and open the template in the editor.
  */
 package calculadora;
-
-import controlador.controlador;
+import controlador.Controlador;
 import vista.vista;
 
 /**
  *
  * @author daniel
  */
-public class Calculadora {
+public class Main {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        System.out.println("Iniciando vista ...");
         vista vista = new vista();
-        new controlador(vista);
+        System.out.println("Iniciando controlador ...");
+        new Controlador(vista);
 
         vista.setVisible(true);
     }
