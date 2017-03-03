@@ -144,9 +144,11 @@ public class Controlador implements ActionListener {
                         
                         if(error) {
                             mostrar();
-                            limpiar = true;
+                        } else {
+                            this.vista.error.setText("Error");
                         }
-                        
+                        limpiar = true;
+
                         break;
 
                     case "C":
@@ -154,12 +156,12 @@ public class Controlador implements ActionListener {
                         break;
 
                     case "<":
-                        if (texto.substring(texto.length()-5, texto.length()).equals("<sub>")) {
-                            texto = texto.substring(0, texto.length()-5);
-                        } else if (texto.substring(texto.length()-6, texto.length()).equals("</sub>")) {
-                            texto = texto.substring(0, texto.length()-6);
-                        }
                         if (texto.length() > 0) {
+                            if (texto.substring(texto.length()-5, texto.length()).equals("<sub>")) {
+                                texto = texto.substring(0, texto.length()-5);
+                            } else if (texto.substring(texto.length()-6, texto.length()).equals("</sub>")) {
+                                texto = texto.substring(0, texto.length()-6);
+                            }
                             this.vista.error.setText("");
                             texto = texto.substring(0, texto.length()-1);
                             mostrar();
