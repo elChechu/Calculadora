@@ -45,12 +45,34 @@ public class Controlador implements ActionListener {
         this.vista.operar.addActionListener(this);
         this.vista.decimal.addActionListener(this);
         this.vista.base.addActionListener(this);
+        this.vista.rbase.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                int base = Integer.parseInt((String)vista.rbase.getSelectedItem());
+                if(limpiar) {
+                    System.out.println(modelo.getResultado().valor+"."+modelo.getResultado().base);
+                    if (modelo.getResultado().base != 10) {
+                        modelo.getResultado().a_10();
+                        System.out.println(modelo.getResultado().valor+"."+modelo.getResultado().base);
+                    }
+                    modelo.getResultado().de_10(base);
+                    System.out.println(modelo.getResultado().valor+"."+modelo.getResultado().base);
+                    texto = String.valueOf(modelo.getResultado().valor);
+                    if (base != 10) {
+                        texto = String.valueOf(modelo.getResultado().valor)+"<sub>"+modelo.getResultado().base;
+                    }
+                    mostrar();
+                }
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
         try {
             JButton boton = (JButton) ae.getSource();
+            boolean error = true;
+            
             this.vista.error.setText("");
             if (limpiar) {
                 inicializa();
@@ -62,37 +84,55 @@ public class Controlador implements ActionListener {
                 switch (boton.getText()) {
                     case "=":
                     case "%":
+                        if (this.modelo.getNumero1() != null) {
+                            error = this.modelo.getNumero1().valida();
+                        }
+                        
                         switch (this.modelo.getOperacion()) {
                             case "+":
                                 if (this.asignaNumero2("\\"+this.modelo.getOperacion())) {
+                                    error = (error)?this.modelo.getNumero2().valida():error;
                                     this.modelo.setResultado(this.modelo.sumar());
+                                } else {
+                                    error = false;
                                 }
-                                
                                 break;
 
                             case "-":
-                                this.asignaNumero2("\\"+this.modelo.getOperacion());
-                                this.modelo.setResultado(this.modelo.restar());
+                                if (this.asignaNumero2("\\"+this.modelo.getOperacion())) {
+                                    error = (error)?this.modelo.getNumero2().valida():error;
+                                    this.modelo.setResultado(this.modelo.restar());
+                                } else {
+                                    error = false;
+                                }
                                 break;
 
                             case "X":
-                                this.asignaNumero2(this.modelo.getOperacion());
-                                this.modelo.setResultado((boton.getText().equals("="))?this.modelo.multiplicar():this.modelo.porcentaje());
+                                if (this.asignaNumero2(this.modelo.getOperacion())) {
+                                    error = (error)?this.modelo.getNumero2().valida():error;
+                                    this.modelo.setResultado((boton.getText().equals("="))?this.modelo.multiplicar():this.modelo.porcentaje());
+                                } else {
+                                    error = false;
+                                }
                                 break;
 
                             case "/":
-                                this.asignaNumero2(this.modelo.getOperacion());
-                                this.modelo.setResultado(this.modelo.dividir());
+                                if (this.asignaNumero2(this.modelo.getOperacion())) {
+                                    error = (error)?this.modelo.getNumero2().valida():error;
+                                    this.modelo.setResultado(this.modelo.dividir());
+                                } else {
+                                    error = false;
+                                }
                                 break;
 
                             default:
-//                                this.modelo.setResultado(Double.parseDouble(this.vista.resultado.getText()));
+                                this.modelo.setResultado(this.modelo.getNumero1());
                                 break;
                         }
                         
                         Numero resultado = this.modelo.getResultado();
                         System.out.println(resultado.valor);
-                        if (!vista.rbase.getSelectedItem().equals(resultado.base) && resultado.valor > 0) {
+                        if (!vista.rbase.getSelectedItem().equals(resultado.base)) {
                             resultado.de_10(Integer.parseInt((String)vista.rbase.getSelectedItem()));
                         }
                         this.resultado = texto;
@@ -102,9 +142,11 @@ public class Controlador implements ActionListener {
                             texto = String.valueOf(resultado.valor)+"<sub>"+resultado.base;
                         }
                         
-
-                        mostrar();
-                        limpiar = true;
+                        if(error) {
+                            mostrar();
+                            limpiar = true;
+                        }
+                        
                         break;
 
                     case "C":
@@ -117,7 +159,6 @@ public class Controlador implements ActionListener {
                         } else if (texto.substring(texto.length()-6, texto.length()).equals("</sub>")) {
                             texto = texto.substring(0, texto.length()-6);
                         }
-                        System.out.println(texto);
                         if (texto.length() > 0) {
                             this.vista.error.setText("");
                             texto = texto.substring(0, texto.length()-1);

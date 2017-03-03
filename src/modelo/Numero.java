@@ -33,24 +33,33 @@ public class Numero {
     }
     
     public void a_10() {
-        int valor = 0, i = 0;
+        int valor = 0, i = 0, negativo = 1;
+        if (this.valor < 0) {
+            negativo = -1;
+            this.valor *= negativo;
+        }
         while (this.valor > 0) {
             valor += (this.valor % 10) * Math.pow(this.base, i);
             this.valor = this.valor / 10;
             i++;
         }
-        this.valor = valor;
+        this.valor = valor * negativo;
         this.base  = 10;
     }
 
     public void de_10(int base) {
-        int valor = 0, i = 0;
+        int valor = 0, i = 0, negativo = 1;
+        
+        if (this.valor < 0) {
+            negativo = -1;
+            this.valor *= negativo;
+        }
         while(this.valor > 0) {
             valor += (this.valor % base) * Math.pow(this.base, i);
             this.valor = this.valor / base;
             i++;
         }
-        this.valor = valor;
+        this.valor = valor * negativo;
         this.base  = base;
     }
     

@@ -71,24 +71,27 @@ public class Calculadora {
     
     public Numero restar() {
         Numero resultado = new Numero(0);
-        unifica();
-        resultado.valor = this.numero1.valor - this.numero2.valor;
+        if (unifica()) {
+            resultado.valor = this.numero1.valor - this.numero2.valor;
+        }
         
         return resultado;
     }
     
     public Numero multiplicar() {
         Numero resultado = new Numero(0);
-        unifica();
-        resultado.valor = this.numero1.valor * this.numero2.valor;
+        if (unifica()) {
+            resultado.valor = this.numero1.valor * this.numero2.valor;
+        }
         
         return resultado;
     }
     
     public Numero dividir() {
         Numero resultado = new Numero(0);
-        unifica();
-        resultado.valor = this.numero1.valor / this.numero2.valor;
+        if (unifica()) {
+            resultado.valor = this.numero1.valor / this.numero2.valor;
+        }
         
         return resultado;
     }
