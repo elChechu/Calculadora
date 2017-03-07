@@ -5,15 +5,18 @@
  */
 package vista;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import java.awt.ComponentOrientation;
+import modelo.Numero;
 
 /**
  *
  * @author daniel
  */
-public class vista extends javax.swing.JFrame {
+public class vista extends javax.swing.JFrame implements ActionListener, gui {
 
+    protected String pantalla;
     /**
      * Creates new form vista
      */
@@ -278,6 +281,25 @@ public class vista extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        n0.addActionListener(this);
+        n2.addActionListener(this);
+        restar.addActionListener(this);
+        sumar.addActionListener(this);
+        operar.addActionListener(this);
+        borrar.addActionListener(this);
+        dividir.addActionListener(this);
+        multiplicar.addActionListener(this);
+        n7.addActionListener(this);
+        n8.addActionListener(this);
+        n9.addActionListener(this);
+        n6.addActionListener(this);
+        n4.addActionListener(this);
+        n5.addActionListener(this);
+        n3.addActionListener(this);
+        decimal.addActionListener(this);
+        n1.addActionListener(this);
+        base.addActionListener(this);
+
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -406,5 +428,70 @@ public class vista extends javax.swing.JFrame {
     public javax.swing.JButton restar;
     public javax.swing.JButton sumar;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        JButton boton = (JButton) ae.getSource();
+
+        if (boton.getName().equals("numero")) {
+             pantalla += boton.getText();
+            mostrar();
+        } else {
+            switch (boton.getText()) {
+                case "=":
+                    break;
+
+                case "C":
+                    break;
+
+                case "<":
+                    if (pantalla.substring(pantalla.length() - 5, pantalla.length()).equals("<sub>")) {
+                        pantalla = pantalla.substring(0, pantalla.length() - 5);
+                    } else if (pantalla.substring(pantalla.length() - 6, pantalla.length()).equals("</sub>")) {
+                        pantalla = pantalla.substring(0, pantalla.length() - 6);
+                    }
+                    if (pantalla.length() > 0) {
+                        this.error.setText("");
+                        pantalla = pantalla.substring(0, pantalla.length() - 1);
+                        mostrar();
+                    }
+                    break;
+
+                case "B":
+                    if (pantalla.length() > 0) {
+                        pantalla += "<sub>";
+                    }
+                    break;
+
+                default:
+                    String[] partes = pantalla.split("<sub>");
+                    if (partes.length == 1) {
+                        Numero n1 = new Numero(partes[0]);
+                    } else {
+                        Numero n1 = new Numero(partes[0], partes[1]);
+                        if (n1.getBase() != Integer.parseInt(partes[1])) {
+                            this.error.setText("Base invalida");
+                        }
+                    }
+
+                    if (this.error.getText().equals("")) {
+//                        operacion = boton.getText();
+                        pantalla += "</sub>" + boton.getText();
+                        mostrar();
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public boolean asignaNumero() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mostrar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

@@ -20,6 +20,10 @@ public abstract class Operacion {
         this.n1 = n1;
         this.n2 = n2;
     }
+    
+    public static boolean validaOperacion(String operador) {
+        return operador.equals("+") || operador.equals("-") || operador.equals("*") || operador.equals("/");
+    }
 
     public int getN1() {
         return n1;
