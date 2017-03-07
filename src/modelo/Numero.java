@@ -4,77 +4,119 @@
  * and open the template in the editor.
  */
 package modelo;
+
 import java.util.Scanner;
 
 /**
  *
  * @author Estudiantes
  */
-public class Numero {
-    public int valor;
-    public int base;
+public final class Numero {
+
+    private int valor;
+    private int base;
 
     public Numero() {
-        Scanner teclado = new Scanner (System.in);
-        System.out.println ("Escriba el valor: ");
-        valor = teclado.nextInt();
-        System.out.println ("Escriba la base: ");
-        base = teclado.nextInt();
+        String _valor;
+        String _base;
+
+        Scanner teclado = new Scanner(System.in);
+        do {
+            System.out.println("Valor:");
+            _valor = teclado.next();
+        } while (!validaValor(_valor));
+
+        do {
+            System.out.println("Base:");
+            _base = teclado.next();
+        } while (!validaValor(_base) || !validaBase(_valor, _base));
+
+        valor = Integer.parseInt(_valor);
+        base = Integer.parseInt(_base);
     }
 
-    public Numero(int valor) {
-        this.valor = valor;
-        this.base = 10;
+    public Numero(String valor) {
+        if (validaValor(valor)) {
+            this.valor = Integer.parseInt(valor);
+            base = 10;
+        }
     }
 
-    public Numero(int valor, int base) {
-        this.valor = valor;
-        this.base = base;
+    public Numero(String valor, String base) {
+        if (validaValor(valor) && validaValor(base) && validaBase(valor, base)) {
+            this.valor = Integer.parseInt(valor);
+            this.base = Integer.parseInt(base);
+        }
     }
-    
-    public void a_10() {
-        int valor = 0, i = 0, negativo = 1;
+
+    public int a_10() {
+        int _valor = 0, i = 0, negativo = 1;
         if (this.valor < 0) {
             negativo = -1;
             this.valor *= negativo;
         }
         while (this.valor > 0) {
-            valor += (this.valor % 10) * Math.pow(this.base, i);
+            _valor += (this.valor % 10) * Math.pow(this.base, i);
             this.valor = this.valor / 10;
             i++;
         }
-        this.valor = valor * negativo;
-        this.base  = 10;
+        return _valor * negativo;
     }
 
     public void de_10(int base) {
-        int valor = 0, i = 0, negativo = 1;
-        
+        int _valor = 0, i = 0, negativo = 1;
+
         if (this.valor < 0) {
             negativo = -1;
             this.valor *= negativo;
         }
-        while(this.valor > 0) {
-            valor += (this.valor % base) * Math.pow(this.base, i);
+        while (this.valor > 0) {
+            _valor += (this.valor % base) * Math.pow(this.base, i);
             this.valor = this.valor / base;
             i++;
         }
-        this.valor = valor * negativo;
-        this.base  = base;
+        this.valor = _valor * negativo;
+        this.base = base;
     }
-    
-    public boolean valida() {
-        int valor = this.valor;
-        
-        if(base > 1 && base < 11) {    
-            while (valor > 0) {
-                if (valor % 10 >= base) {
+
+    public boolean validaValor(String valor) {
+        try {
+            Integer.parseInt(valor);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    public boolean validaBase(String valor, String base) {
+        int _valor = Integer.parseInt(valor);
+        int _base = Integer.parseInt(base);
+
+        if (_base > 1 && _base < 11) {
+            while (_valor > 0) {
+                if (_valor % 10 >= _base) {
                     return false;
                 }
-                valor /= 10;
+                _valor /= 10;
             }
             return true;
         }
         return false;
+    }
+
+    public int getValor() {
+        return valor;
+    }
+
+    public void setValor(int valor) {
+        this.valor = valor;
+    }
+
+    public int getBase() {
+        return base;
+    }
+
+    public void setBase(int base) {
+        this.base = base;
     }
 }
