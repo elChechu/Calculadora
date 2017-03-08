@@ -16,13 +16,10 @@ public abstract class Operacion {
     char o;
     int re;
 
-    public Operacion(int n1, int n2) {
+    public Operacion(int n1, int n2, char o) {
         this.n1 = n1;
         this.n2 = n2;
-    }
-    
-    public static boolean validaOperacion(String operador) {
-        return operador.equals("+") || operador.equals("-") || operador.equals("*") || operador.equals("/");
+        this.o  = o;
     }
 
     public int getN1() {

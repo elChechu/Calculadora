@@ -14,7 +14,7 @@ public class Division extends Operacion {
     Operacion resta;
 
     public Division(int n1, int n2) {
-        super(n1, n2);
+        super(n1, n2, '/');
         while (n1 >= n2) {
             resta = new Resta(n1, n2);
             n1 = resta.re;

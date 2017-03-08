@@ -5,33 +5,27 @@
  */
 package vista;
 
+import java.util.Scanner;
 import modelo.Numero;
 
 /**
  *
  * @author jpena
  */
-public class texto implements gui {
+public class texto {
 
-    public texto() {
+    public texto(Scanner teclado) {
         Numero n1 = new Numero();
+        String operacion;
         do {
             System.out.println("Operacion:");
-//            operacion = teclado.next();
-//            System.out.println(validaOperacion(operacion));
-//        } while (!validaOperacion(operacion));
-        } while (!true);
+            operacion = teclado.next();
+        } while (!validaOperacion(operacion));
         Numero n2 = new Numero();
+        //realizaOperacion();
     }
 
-    @Override
-    public boolean asignaNumero() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean validaOperacion(String operador) {
+        return operador.equals("+") || operador.equals("-") || operador.equals("*") || operador.equals("/");
     }
-
-    @Override
-    public void mostrar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

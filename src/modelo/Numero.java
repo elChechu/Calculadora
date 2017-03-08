@@ -35,17 +35,17 @@ public final class Numero {
         base = Integer.parseInt(_base);
     }
 
-    public Numero(String valor) {
-        if (validaValor(valor)) {
-            this.valor = Integer.parseInt(valor);
-            base = 10;
+    public Numero(String _valor) {
+        if (validaValor(_valor)) {
+            this.valor = Integer.parseInt(_valor);
+            this.base = 10;
         }
     }
 
-    public Numero(String valor, String base) {
-        if (validaValor(valor) && validaValor(base) && validaBase(valor, base)) {
-            this.valor = Integer.parseInt(valor);
-            this.base = Integer.parseInt(base);
+    public Numero(String _valor, String _base) {
+        if (validaValor(_valor) && validaValor(_base) && validaBase(_valor, _base)) {
+            this.valor = Integer.parseInt(_valor);
+            this.base = Integer.parseInt(_base);
         }
     }
 

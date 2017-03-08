@@ -14,9 +14,10 @@ import modelo.Numero;
  *
  * @author daniel
  */
-public class vista extends javax.swing.JFrame implements ActionListener, gui {
+public class vista extends javax.swing.JFrame implements ActionListener {
 
-    protected String pantalla;
+    protected String pantalla = "", operacion = "";
+
     /**
      * Creates new form vista
      */
@@ -432,13 +433,39 @@ public class vista extends javax.swing.JFrame implements ActionListener, gui {
     @Override
     public void actionPerformed(ActionEvent ae) {
         JButton boton = (JButton) ae.getSource();
+        String[] partes;
 
         if (boton.getName().equals("numero")) {
-             pantalla += boton.getText();
+            pantalla += boton.getText();
+            if (operacion.equals("")) {
+                partes = pantalla.split("<sub>");
+                if (partes.length == 1) {
+                    Numero n1 = new Numero(partes[0]);
+                } else {
+                    Numero n1 = new Numero(partes[0], partes[1]);
+                    if (n1.getBase() != Integer.parseInt(partes[1])) {
+                        this.error.setText("Base invalida");
+                    }
+                }
+            } else {
+                partes = pantalla.split("\\"+operacion);
+                partes = partes[1].split("<sub>");
+                if (partes.length == 1) {
+                    Numero n2 = new Numero(partes[0]);
+                } else {
+                    Numero n2 = new Numero(partes[0], partes[1]);
+                    if (n2.getBase() != Integer.parseInt(partes[1])) {
+                        this.error.setText("Base invalida");
+                    }
+                }
+            }
             mostrar();
         } else {
             switch (boton.getText()) {
                 case "=":
+                    if (this.error.getText().equals("") && !operacion.equals("")) {
+                        //realizaOperacion();
+                    }
                     break;
 
                 case "C":
@@ -459,39 +486,35 @@ public class vista extends javax.swing.JFrame implements ActionListener, gui {
 
                 case "B":
                     if (pantalla.length() > 0) {
-                        pantalla += "<sub>";
+                        if (operacion.equals("")) {
+                            if (!pantalla.contains("<sub>")) {
+                                pantalla += "<sub>";
+                            }
+                        } else {
+                            partes = pantalla.split("\\"+operacion);
+                            if (!partes[1].contains("<sub>")) {
+                                pantalla += "<sub>";
+                            }
+                        }
                     }
                     break;
 
                 default:
-                    String[] partes = pantalla.split("<sub>");
-                    if (partes.length == 1) {
-                        Numero n1 = new Numero(partes[0]);
-                    } else {
-                        Numero n1 = new Numero(partes[0], partes[1]);
-                        if (n1.getBase() != Integer.parseInt(partes[1])) {
-                            this.error.setText("Base invalida");
-                        }
-                    }
-
-                    if (this.error.getText().equals("")) {
-//                        operacion = boton.getText();
+                    if (this.error.getText().equals("") && operacion.equals("")) {
+                        operacion = boton.getText();
                         pantalla += "</sub>" + boton.getText();
+
                         mostrar();
                     }
+
                     break;
             }
         }
     }
 
-    @Override
-    public boolean asignaNumero() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void mostrar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String resultado = "";
+        mostrar.setText("<div style='text-align:right;font-size:30px'><span>" + resultado + "</span><br /><span>" + pantalla + "</span></div>");
     }
 
 }

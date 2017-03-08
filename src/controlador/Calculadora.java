@@ -50,9 +50,10 @@ public class Calculadora {
         } else {
             System.out.println("-----------------------------");
             do {
-                texto texto = new texto();
+                texto texto = new texto(teclado);
                 System.out.println("Desea realizar otra operacion (s/n)?\n-----------------------------");
             } while(teclado.next().equals("s"));
         }
     }
+    
 }

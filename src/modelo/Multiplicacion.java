@@ -14,7 +14,7 @@ public class Multiplicacion extends Operacion {
     Operacion suma;
 
     public Multiplicacion(int n1, int n2) {
-        super(n1, n2);
+        super(n1, n2, '*');
         for (int i = 0; i < n2; i++) {
             suma = new Suma(this.re, n1);
             super.setRe(suma.re);
