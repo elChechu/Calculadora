@@ -49,34 +49,34 @@ public final class Numero {
         }
     }
 
-    public int a_10() {
-        int _valor = 0, i = 0, negativo = 1;
-        if (this.valor < 0) {
+    public Numero a_10() {
+        int _valor = 0, i = 0, negativo = 1, v = this.valor, b = this.base;
+        if (v < 0) {
             negativo = -1;
-            this.valor *= negativo;
+            v *= negativo;
         }
-        while (this.valor > 0) {
-            _valor += (this.valor % 10) * Math.pow(this.base, i);
-            this.valor = this.valor / 10;
+        while (v > 0) {
+            _valor += (v % 10) * Math.pow(b, i);
+            v = v / 10;
             i++;
         }
-        return _valor * negativo;
+        return new Numero(String.valueOf(_valor * negativo));
     }
 
-    public void de_10(int base) {
-        int _valor = 0, i = 0, negativo = 1;
+    public Numero de_10(int base) {
+        int _valor = 0, i = 0, negativo = 1, v = this.valor, b = this.base;
 
-        if (this.valor < 0) {
+        if (v < 0) {
             negativo = -1;
-            this.valor *= negativo;
+            v *= negativo;
         }
-        while (this.valor > 0) {
-            _valor += (this.valor % base) * Math.pow(this.base, i);
-            this.valor = this.valor / base;
+        while (v > 0) {
+            _valor += (v % base) * Math.pow(b, i);
+            v = v / base;
             i++;
         }
-        this.valor = _valor * negativo;
-        this.base = base;
+        
+        return new Numero(String.valueOf(_valor * negativo), String.valueOf(base));
     }
 
     public boolean validaValor(String valor) {

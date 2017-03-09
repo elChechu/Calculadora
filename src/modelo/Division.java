@@ -13,12 +13,20 @@ public class Division extends Operacion {
 
     Operacion resta;
 
-    public Division(int n1, int n2) {
+    public Division(Numero n1, Numero n2) {
         super(n1, n2, '/');
-        while (n1 >= n2) {
-            resta = new Resta(n1, n2);
-            n1 = resta.re;
-            this.re++;
+        Numero res = n1.a_10();
+        int division = 0;
+        
+        if(n2.getValor() != 0) {
+            while (res.getValor() >= n2.a_10().getValor()) {
+                resta = new Resta(res, n2);
+                res = resta.getRe();
+                division++;
+            }
+            super.setRe(new Numero(String.valueOf(division)));
+        } else {
+            System.err.println("No es posible dividir por 0");
         }
     }
 }

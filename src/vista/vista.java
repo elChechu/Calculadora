@@ -5,10 +5,16 @@
  */
 package vista;
 
+import controlador.Calculadora;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import modelo.Division;
+import modelo.Multiplicacion;
 import modelo.Numero;
+import modelo.Operacion;
+import modelo.Resta;
+import modelo.Suma;
 
 /**
  *
@@ -16,12 +22,16 @@ import modelo.Numero;
  */
 public class vista extends javax.swing.JFrame implements ActionListener {
 
-    protected String pantalla = "", operacion = "";
+    protected String pantalla = "", operacion = "", resultado = "";;
+    protected Numero n11, n22;
+    protected boolean nueva = false;
+    private Calculadora calculadora;
 
     /**
      * Creates new form vista
      */
-    public vista() {
+    public vista(Calculadora calc) {
+        this.calculadora = calc;
         initComponents();
     }
 
@@ -397,7 +407,8 @@ public class vista extends javax.swing.JFrame implements ActionListener {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new vista().setVisible(true);
+                Calculadora c = new Calculadora();
+                new vista(c).setVisible(true);
             }
         });
     }
@@ -433,28 +444,32 @@ public class vista extends javax.swing.JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         JButton boton = (JButton) ae.getSource();
+        Operacion op = null;
         String[] partes;
+        if (nueva) {
+            inicializa();
+        }
 
         if (boton.getName().equals("numero")) {
             pantalla += boton.getText();
             if (operacion.equals("")) {
                 partes = pantalla.split("<sub>");
                 if (partes.length == 1) {
-                    Numero n1 = new Numero(partes[0]);
+                    n11 = new Numero(partes[0]);
                 } else {
-                    Numero n1 = new Numero(partes[0], partes[1]);
-                    if (n1.getBase() != Integer.parseInt(partes[1])) {
+                    n11 = new Numero(partes[0], partes[1]);
+                    if (n11.getBase() != Integer.parseInt(partes[1])) {
                         this.error.setText("Base invalida");
                     }
                 }
             } else {
-                partes = pantalla.split("\\"+operacion);
+                partes = pantalla.split("\\" + operacion);
                 partes = partes[1].split("<sub>");
                 if (partes.length == 1) {
-                    Numero n2 = new Numero(partes[0]);
+                    n22 = new Numero(partes[0]);
                 } else {
-                    Numero n2 = new Numero(partes[0], partes[1]);
-                    if (n2.getBase() != Integer.parseInt(partes[1])) {
+                    n22 = new Numero(partes[0], partes[1]);
+                    if (n22.getBase() != Integer.parseInt(partes[1])) {
                         this.error.setText("Base invalida");
                     }
                 }
@@ -464,11 +479,40 @@ public class vista extends javax.swing.JFrame implements ActionListener {
             switch (boton.getText()) {
                 case "=":
                     if (this.error.getText().equals("") && !operacion.equals("")) {
-                        //realizaOperacion();
+                        switch (operacion) {
+                            case "+":
+                                op = new Suma(n11, n22);
+                                break;
+
+                            case "-":
+                                op = new Resta(n11, n22);
+                                break;
+
+                            case "*":
+                                op = new Multiplicacion(n11, n22);
+                                break;
+
+                            case "/":
+                                op = new Division(n11, n22);
+                                break;
+                        }
+
+                        if (!rbase.getSelectedItem().equals(10)) {
+                            op.setRe(op.getRe().de_10(Integer.parseInt((String)rbase.getSelectedItem())));
+                        }
+                        calculadora.realizaOperacion(op);
+                        resultado = pantalla;
+                        pantalla = String.valueOf(op.getRe().getValor());
+                        if (op.getRe().getBase() != 10) {
+                            pantalla = String.valueOf(op.getRe().getValor())+"<sub>"+op.getRe().getBase();
+                        }
+                        nueva = true;
+                        mostrar();
                     }
                     break;
 
                 case "C":
+                    inicializa();
                     break;
 
                 case "<":
@@ -491,7 +535,7 @@ public class vista extends javax.swing.JFrame implements ActionListener {
                                 pantalla += "<sub>";
                             }
                         } else {
-                            partes = pantalla.split("\\"+operacion);
+                            partes = pantalla.split("\\" + operacion);
                             if (!partes[1].contains("<sub>")) {
                                 pantalla += "<sub>";
                             }
@@ -513,8 +557,15 @@ public class vista extends javax.swing.JFrame implements ActionListener {
     }
 
     public void mostrar() {
-        String resultado = "";
         mostrar.setText("<div style='text-align:right;font-size:30px'><span>" + resultado + "</span><br /><span>" + pantalla + "</span></div>");
     }
 
+    public void inicializa() {
+        error.setText("");
+        operacion = "";
+        resultado = "";
+        pantalla = "";
+        nueva = false;
+        mostrar();
+    }
 }

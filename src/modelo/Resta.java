@@ -11,8 +11,8 @@ package modelo;
  */
 public class Resta extends Operacion {
 
-    public Resta(int n1, int n2) {
+    public Resta(Numero n1, Numero n2) {
         super(n1, n2, '-');
-        super.setRe(this.n1 - this.n2);
+        super.setRe(new Numero(String.valueOf(this.n1.a_10().getValor() - this.n2.a_10().getValor())));
     }
 }

@@ -6,6 +6,7 @@
 package controlador;
 
 import java.util.Scanner;
+import modelo.Operacion;
 import vista.texto;
 import vista.vista;
 
@@ -15,45 +16,35 @@ import vista.vista;
  */
 public class Calculadora {
 
+    public Scanner teclado = new Scanner(System.in);
+
+    public Calculadora() {
+    }
+
     public static void main(String[] args) {
 
         Calculadora calculadora = new Calculadora();
-
-        /*
-        resultado = new Suma(2, 4);
-        System.out.println(resultado.getRe());
-        resultado = new Division(20, 7);
-        System.out.println(resultado.getRe());
-        
-        switch (operacion) {
-            case "+":
-                break;
-
-            case "-":
-                break;
-
-            case "*":
-                break;
-
-            case "/":
-                break;
-         */
-    }
-
-    public Calculadora() {
         Scanner teclado = new Scanner(System.in);
 
         System.out.println("-----------------------------\nCalculadora\nDesea ver modo grafico (s/n)?");
         if (teclado.next().equals("s")) {
-            vista vista = new vista();
+            vista vista = new vista(calculadora);
             vista.setVisible(true);
         } else {
             System.out.println("-----------------------------");
             do {
-                texto texto = new texto(teclado);
+                texto texto = new texto(calculadora);
                 System.out.println("Desea realizar otra operacion (s/n)?\n-----------------------------");
-            } while(teclado.next().equals("s"));
+            } while (teclado.next().equals("s"));
         }
+
     }
-    
+
+    public void realizaOperacion(Operacion operacion) {
+        if (operacion.getRe() != null) {
+            System.out.println(operacion.getN1().getValor()+"b"+operacion.getN1().getBase()+operacion.getOper()+operacion.getN2().getValor()+"b"+operacion.getN2().getBase()+"="+operacion.getRe().getValor()+"b"+operacion.getRe().getBase());
+        }
+
+    }
+
 }

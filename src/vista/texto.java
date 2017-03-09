@@ -6,7 +6,13 @@
 package vista;
 
 import java.util.Scanner;
+import controlador.Calculadora;
+import modelo.Division;
+import modelo.Multiplicacion;
 import modelo.Numero;
+import modelo.Operacion;
+import modelo.Resta;
+import modelo.Suma;
 
 /**
  *
@@ -14,15 +20,36 @@ import modelo.Numero;
  */
 public class texto {
 
-    public texto(Scanner teclado) {
+    public texto(Calculadora calculadora) {
+        Operacion operacion = null;
         Numero n1 = new Numero();
-        String operacion;
+        String opera;
         do {
             System.out.println("Operacion:");
-            operacion = teclado.next();
-        } while (!validaOperacion(operacion));
+            opera = calculadora.teclado.next();
+        } while (!validaOperacion(opera));
         Numero n2 = new Numero();
-        //realizaOperacion();
+
+        switch (opera) {
+            case "+":
+                operacion = new Suma(n1, n2);
+                break;
+
+            case "-":
+                operacion = new Resta(n1, n2);
+                break;
+
+            case "*":
+                operacion = new Multiplicacion(n1, n2);
+                break;
+
+            case "/":
+                operacion = new Division(n1, n2);
+                break;
+        }
+        System.out.println("Base:");
+        operacion.setRe(operacion.getRe().de_10(calculadora.teclado.nextInt()));
+        calculadora.realizaOperacion(operacion);
     }
 
     private boolean validaOperacion(String operador) {
