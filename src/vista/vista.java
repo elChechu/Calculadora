@@ -22,9 +22,10 @@ import modelo.Suma;
  */
 public class vista extends javax.swing.JFrame implements ActionListener {
 
-    protected String pantalla = "", operacion = "", resultado = "";;
+    protected String pantalla = "", operacion = "", resultado = "";
     protected Numero n11, n22;
     protected boolean nueva = false;
+    protected Operacion op = null;
     private Calculadora calculadora;
 
     /**
@@ -310,6 +311,23 @@ public class vista extends javax.swing.JFrame implements ActionListener {
         decimal.addActionListener(this);
         n1.addActionListener(this);
         base.addActionListener(this);
+        rbase.addActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent ae) {
+              int base = Integer.parseInt((String)rbase.getSelectedItem());
+              if (nueva && op.getRe().getBase() != base) {
+                  if(op.getRe().getBase() != 10) {
+                      op.setRe(op.getRe().a_10());
+                  }
+                  op.setRe(op.getRe().de_10(base));
+                  pantalla = "="+String.valueOf(op.getRe().getValor());
+                  if (op.getRe().getBase() != 10) {
+                      pantalla = "="+String.valueOf(op.getRe().getValor()) + "<sub>" + op.getRe().getBase();
+                  }
+                  mostrar();
+              }
+          }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -384,7 +402,7 @@ public class vista extends javax.swing.JFrame implements ActionListener {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -444,7 +462,6 @@ public class vista extends javax.swing.JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         JButton boton = (JButton) ae.getSource();
-        Operacion op = null;
         String[] partes;
         if (nueva) {
             inicializa();
@@ -463,7 +480,8 @@ public class vista extends javax.swing.JFrame implements ActionListener {
                     }
                 }
             } else {
-                partes = pantalla.split("\\" + operacion);
+                String division = (operacion.equals("+") || operacion.equals("-")) ? "\\" + operacion : operacion;
+                partes = pantalla.split(division);
                 partes = partes[1].split("<sub>");
                 if (partes.length == 1) {
                     n22 = new Numero(partes[0]);
@@ -489,25 +507,31 @@ public class vista extends javax.swing.JFrame implements ActionListener {
                                 break;
 
                             case "*":
+                            case "X":
                                 op = new Multiplicacion(n11, n22);
                                 break;
 
                             case "/":
                                 op = new Division(n11, n22);
+                                if (op.getRe() == null) {
+                                    this.error.setText("Division por 0");
+                                }
                                 break;
                         }
 
-                        if (!rbase.getSelectedItem().equals(10)) {
-                            op.setRe(op.getRe().de_10(Integer.parseInt((String)rbase.getSelectedItem())));
-                        }
-                        calculadora.realizaOperacion(op);
-                        resultado = pantalla;
-                        pantalla = String.valueOf(op.getRe().getValor());
-                        if (op.getRe().getBase() != 10) {
-                            pantalla = String.valueOf(op.getRe().getValor())+"<sub>"+op.getRe().getBase();
+                        if (this.error.getText().equals("")) {
+                            if (!rbase.getSelectedItem().equals(10)) {
+                                op.setRe(op.getRe().de_10(Integer.parseInt((String) rbase.getSelectedItem())));
+                            }
+                            calculadora.realizaOperacion(op);
+                            resultado = pantalla;
+                            pantalla = "=" + String.valueOf(op.getRe().getValor());
+                            if (op.getRe().getBase() != 10) {
+                                pantalla = "=" + String.valueOf(op.getRe().getValor()) + "<sub>" + op.getRe().getBase();
+                            }
+                            mostrar();
                         }
                         nueva = true;
-                        mostrar();
                     }
                     break;
 
@@ -535,7 +559,8 @@ public class vista extends javax.swing.JFrame implements ActionListener {
                                 pantalla += "<sub>";
                             }
                         } else {
-                            partes = pantalla.split("\\" + operacion);
+                            String division = (operacion.equals("+") || operacion.equals("-")) ? "\\" + operacion : operacion;
+                            partes = pantalla.split(division);
                             if (!partes[1].contains("<sub>")) {
                                 pantalla += "<sub>";
                             }

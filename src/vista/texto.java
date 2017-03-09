@@ -40,6 +40,7 @@ public class texto {
                 break;
 
             case "*":
+            case "X":
                 operacion = new Multiplicacion(n1, n2);
                 break;
 
