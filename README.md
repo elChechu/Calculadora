@@ -6,4 +6,4 @@ Calculadora elaborada en java. operaciones de suma, resta, multiplicacion, divis
 * Alvaro Enrique Ortiz.
 * Informatica.
 
-![Calcularora](jpena.github.com/Calculadora/Calculadora.png)
+![Calculadora](./Calculadora.png?raw=true "Calculadora")
